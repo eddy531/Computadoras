@@ -1,0 +1,32 @@
+html, body{
+    padding: 0;
+    margin: 0;
+}
+.navbar{
+    background-color: rgb(87, 85, 85);
+    color: rgb(255, 255, 255);
+    height: auto;
+}
+.navDer img{
+    width: 8vh;
+}
+
+.elementos{
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+}
+.elementos a{
+    text-decoration: none;
+    color: white;
+    margin: 20px;
+}
+
+.imagen img{
+    width: 100%;
+}
+
+.computadora{
+    border: 2px solid black;
+    padding: 20px;
+}
