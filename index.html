@@ -35,19 +35,19 @@
 
         const productform = document.getElementById("formulario");
         productform.addEventListener("submit", async(e)=>{
-        e.preventDefault();
-        await addDoc(collection(db, "productos"),{
-            codigo: productform.codigo.value,
-            marca: productform.marca.value,
-            modelo: productform.modelo.value,
-            precio: productform.modelo.value,
-            tipo: productform.tipo.value,
-            material: productform.material.value,
-            color: productform.color.value,
-            fechaLanza: productform.fechaLanza.value,
-            garantia: productform.garantia.value,
-            cantidad: productform.cantidad.value
-        });
+            e.preventDefault();
+            await addDoc(collection(db, "productos"),{
+                codigo: productform.codigo.value,
+                marca: productform.marca.value,
+                modelo: productform.modelo.value,
+                precio: productform.modelo.value,
+                tipo: productform.tipo.value,
+                material: productform.material.value,
+                color: productform.color.value,
+                fechaLanza: productform.fechaLanza.value,
+                garantia: productform.garantia.value,
+                cantidad: productform.cantidad.value
+            });
         productform.reset();
     });
 
@@ -70,7 +70,7 @@
         <img src="/img/ing1.jpg" alt="">
     </section>
     <section>
-        <form action="formulario">
+        <form id="formulario">
             <label for="">
                 <p>Codigo:</p>
             </label>
