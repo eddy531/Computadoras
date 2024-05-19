@@ -18,27 +18,22 @@
 
         // TODO: Add SDKs for Firebase products that you want to use
         // https://firebase.google.com/docs/web/setup#available-libraries
-
+      
         // Your web app's Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyDDRxFwJiPhTufws1Q8s8GqZDq_GySgWxo",
-            authDomain: "computadoras-481b7.firebaseapp.com",
-            projectId: "computadoras-481b7",
-            storageBucket: "computadoras-481b7.appspot.com",
-            messagingSenderId: "744576997492",
-            appId: "1:744576997492:web:cf6a1acc350e2291b55921"
+          apiKey: "AIzaSyDDRxFwJiPhTufws1Q8s8GqZDq_GySgWxo",
+          authDomain: "computadoras-481b7.firebaseapp.com",
+          projectId: "computadoras-481b7",
+          storageBucket: "computadoras-481b7.appspot.com",
+          messagingSenderId: "744576997492",
+          appId: "1:744576997492:web:cf6a1acc350e2291b55921"
         };
-
-
-
+      
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app)
 
         const productform = document.getElementById("formulario");
-        const productosDiv = document.getElementById("productos");
-
-
         productform.addEventListener("submit", async(e)=>{
             e.preventDefault();
             await addDoc(collection(db, "productos"),{
@@ -55,39 +50,8 @@
             });
         productform.reset();
     });
-    // Función para mostrar los productos en el HTML
-    const mostrarProductos = async () => {
-            const querySnapshot = await collection(db, "productos").get();
-            productosDiv.innerHTML = "";
-            querySnapshot.forEach((doc) => {
-                const producto = doc.data();
-                const productoHTML = `
-                    <div>
-                        <p>Codigo: ${producto.codigo}</p>
-                        <p>Marca: ${producto.marca}</p>
-                        <p>Modelo: ${producto.modelo}</p>
-                        <p>Precio: ${producto.precio}</p>
-                        <p>Tipo: ${producto.tipo}</p>
-                        <p>Material: ${producto.material}</p>
-                        <p>Color: ${producto.color}</p>
-                        <p>Fecha de lanzamiento: ${producto.fechaLanza}</p>
-                        <p>Garantia: ${producto.garantia}</p>
-                        <p>Cantidad: ${producto.cantidad}</p>
-                    </div>
-                `;
-                productosDiv.innerHTML += productoHTML;
-            });
-        };
 
-        // Llamar a la función para mostrar productos cuando se cargue la página
-        mostrarProductos();
-
-        // Actualizar la lista de productos cada vez que haya cambios en Firestore
-        onSnapshot(collection(db, "productos"), () => {
-            mostrarProductos();
-        });
-
-    </script>
+      </script>
 
 
     <nav class="navbar">
@@ -132,7 +96,6 @@
 
             <button type="submit">Agregar Producto</button>
         </form>
-    <div id="productos"></div>
 
 </body>
 
