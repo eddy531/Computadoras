@@ -30,11 +30,24 @@ html, body{
 .computadora{
     border: 2px solid black;
     padding: 20px;
+    
 }
 form{
-    text-align: center;
-    border: 2px solid black;
+    background: linear-gradient(0deg, #bbbfbd 0%, #ffffff 32%, #e6ebea 67%, #ffffff 100%);    border: 2px solid black;
+    max-width: 650px;
     width: 50vw;
     padding: 30px;
     margin: 50px;
+    margin-left: 28vw;
+    align-content: center;
+
+}
+.formulario{
+    font-family: sans-serif;
+}
+
+
+
+.btn{
+    margin-top: 30px;
 }
