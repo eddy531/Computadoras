@@ -15,6 +15,22 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const db = getFirestore(app)
 
-const productform = document.getElementById("")
+const productform = document.getElementById("formulario");
+productform.addEventListener("submit", async(e)=>{
+  e.preventDefault();
+  await addDoc(collection(db, "productos"),{
+    codigo: productform.codigo.value,
+    marca: productform.marca.value,
+    modelo: productform.modelo.value,
+    precio: productform.modelo.value,
+    tipo: productform.tipo.value,
+    material: productform.material.value,
+    color: productform.color.value,
+    fechaLanza: productform.fechaLanza.value,
+    garantia: productform.garantia.value,
+    cantidad: productform.cantidad.value
+  })
+  productform.reset();
+})
