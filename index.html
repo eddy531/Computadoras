@@ -38,15 +38,6 @@
             e.preventDefault();
             await addDoc(collection(db, "productos"),{
                 codigo: productform.codigo.value,
-                marca: productform.marca.value,
-                modelo: productform.modelo.value,
-                precio: productform.modelo.value,
-                tipo: productform.tipo.value,
-                material: productform.material.value,
-                color: productform.color.value,
-                fechaLanza: productform.fechaLanza.value,
-                garantia: productform.garantia.value,
-                cantidad: productform.cantidad.value
             });
         productform.reset();
     });
