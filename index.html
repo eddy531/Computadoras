@@ -81,18 +81,14 @@
             document.getElementById("cantidadRespuesta").value = modeloData.cantidad;
         });
         //Actualizar
-        const formularioLeer = document.getElementById("formularioLeer");
-            formularioLeer.addEventListener("submit", async (e) => {
+        const formularioActu = document.getElementById("formularioLeer");    
+        formularioActu.addEventListener("submit", async (e) => {
                 e.preventDefault();
                 try {
-                    const actualizar = formularioLeer.actualizar.value;
+                    
+                    const actualizar = formularioActu.modeloLeer.value;              
 
-                    if (!actualizar) {
-                        console.error("El campo no debe estar vacio");
-                        return;
-                    }
-
-                    const computadoraQuery = query(collection(db, "caricaturas"), where("nombre", "==", actualizar));
+                    const computadoraQuery = query(collection(db, "productos"), where("modelo", "==", actualizar));
                     const querySnapshot = await getDocs(computadoraQuery);
 
                     if (querySnapshot.empty) {
@@ -102,20 +98,20 @@
 
                     const docRef = querySnapshot.docs[0].ref;
                     await updateDoc(docRef, {
-                        nombre: formularioLeer.codigoRespuesta.value,
-                        year: formularioLeer.marcaRespuesta.value,
-                        creador: formularioLeer.modeloRespuesta.value,
-                        genero: formularioLeer.precioRespuesta.value,
-                        pais: formularioLeer.tipoRespuesta.value,
-                        personajes: formularioLeer.materialRespuesta.value,
-                        duracion: formularioLeer.colorRespuesta.value,
-                        temporadas: pformularioLeer.fechaLanzaRespuesta.value,
-                        vigencia: pformularioLeer.garantiaRespuesta.value,
-                        popularidad: formularioLeer.cantidadRespuesta.value,
+                        codigo: formularioActu.codigoRespuesta.value,
+                        marca: formularioActu.marcaRespuesta.value,
+                        modelo: formularioActu.modeloRespuesta.value,
+                        precio: formularioActu.precioRespuesta.value,
+                        tipo: formularioActu.tipoRespuesta.value,
+                        material: formularioActu.materialRespuesta.value,
+                        color: formularioActu.colorRespuesta.value,
+                        fechaLanza: formularioActu.fechaLanzaRespuesta.value,
+                        garantia: formularioActu.garantiaRespuesta.value,
+                        cantidad: formularioActu.cantidadRespuesta.value,
                     });
                     console.log("Documento actualizado correctamente");
 
-                    formularioLeer.reset();
+                    formularioActu.reset();
                 } catch (error) {
                     console.error("Error al actualizar documento: ", error);
                 }
@@ -211,16 +207,10 @@
         </form>
     </div>
 
-    <form id="formularioBorrar">
-        <h1>Borrar</h1>
-        <input id="modeloBorrar" type="text" placeholder="Buscar.." class="form-control"><br>
-        <button type="submit" class="btn btn-outline-danger">Eliminar</button>
-    </form>
+
 
     <div class="formulario">
-        <h1>Buscar</h1>
-        <input type="text" id="modeloLeer" placeholder="Modelo...">
-        <button id="buscarModel" type="button">Buscar</button>
+
         
         <form id="formularioLeer">
             <label for=""><p>Codigo:</p></label>
@@ -250,9 +240,19 @@
                         <button class="btn btn-outline-success" type="submit" id="actualizar">Actualizar</button>
                     </div>
                 </div>
-            </div>
+            </div><br>
+            <h1>Buscar</h1>
+            <input type="text" id="modeloLeer" placeholder="Modelo..." class="form-control" required>
+            <button id="buscarModel" type="button" class="btn btn-outline-danger">Buscar</button>
+        
         </form>
     </div>
+
+    <form id="formularioBorrar">
+        <h1>Borrar</h1>
+        <input id="modeloBorrar" type="text" placeholder="Buscar.." class="form-control"><br>
+        <button type="submit" class="btn btn-outline-danger">Eliminar</button>
+    </form>
         
 
 </body>
