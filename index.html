@@ -14,7 +14,7 @@
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import {getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import {getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, where, getDocs, updateDoc} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
         // TODO: Add SDKs for Firebase products that you want to use
         // https://firebase.google.com/docs/web/setup#available-libraries
@@ -33,6 +33,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app)
 
+        //Insertar
         const productform = document.getElementById("formulario");
         productform.addEventListener("submit", async(e)=>{
             e.preventDefault();
@@ -40,7 +41,7 @@
                 codigo: productform.codigo.value,
                 marca: productform.marca.value,
                 modelo: productform.modelo.value,
-                precio: productform.modelo.value,
+                precio: productform.precio.value,
                 tipo: productform.tipo.value,
                 material: productform.material.value,
                 color: productform.color.value,
@@ -50,6 +51,111 @@
             });
         productform.reset();
     });
+        //Leer
+        const leerproduc = document.getElementById("buscarModel");
+        leerproduc.addEventListener("click", async()=>{
+            const modeloLeer = document.getElementById("modeloLeer").value;
+
+            if (!modeloLeer){
+                console.error("Llene el campo");
+                return;
+            }
+            const modeloQuery = query(collection(db, "productos"), where("modelo", "==", modeloLeer));
+            const querySnapshot = await getDocs(modeloQuery);
+
+            if (querySnapshot.empty) {
+                console.log("No se encontro")
+                return;
+            }
+            const modeloData = querySnapshot.docs[0].data();
+
+            document.getElementById("codigoRespuesta").value = modeloData.codigo;
+            document.getElementById("marcaRespuesta").value = modeloData.marca;
+            document.getElementById("modeloRespuesta").value = modeloData.modelo;
+            document.getElementById("precioRespuesta").value = modeloData.precio;
+            document.getElementById("tipoRespuesta").value = modeloData.tipo;
+            document.getElementById("materialRespuesta").value = modeloData.material;
+            document.getElementById("colorRespuesta").value = modeloData.color;
+            document.getElementById("fechaLanzaRespuesta").value = modeloData.fechaLanza;
+            document.getElementById("garantiaRespuesta").value = modeloData.garantia;
+            document.getElementById("cantidadRespuesta").value = modeloData.cantidad;
+        });
+        //Actualizar
+        const formularioLeer = document.getElementById("formularioLeer");
+            formularioLeer.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                try {
+                    const actualizar = formularioLeer.actualizar.value;
+
+                    if (!actualizar) {
+                        console.error("El campo no debe estar vacio");
+                        return;
+                    }
+
+                    const computadoraQuery = query(collection(db, "caricaturas"), where("nombre", "==", actualizar));
+                    const querySnapshot = await getDocs(computadoraQuery);
+
+                    if (querySnapshot.empty) {
+                        console.log("No se encontro");
+                        return;
+                    }
+
+                    const docRef = querySnapshot.docs[0].ref;
+                    await updateDoc(docRef, {
+                        nombre: formularioLeer.codigoRespuesta.value,
+                        year: formularioLeer.marcaRespuesta.value,
+                        creador: formularioLeer.modeloRespuesta.value,
+                        genero: formularioLeer.precioRespuesta.value,
+                        pais: formularioLeer.tipoRespuesta.value,
+                        personajes: formularioLeer.materialRespuesta.value,
+                        duracion: formularioLeer.colorRespuesta.value,
+                        temporadas: pformularioLeer.fechaLanzaRespuesta.value,
+                        vigencia: pformularioLeer.garantiaRespuesta.value,
+                        popularidad: formularioLeer.cantidadRespuesta.value,
+                    });
+                    console.log("Documento actualizado correctamente");
+
+                    formularioLeer.reset();
+                } catch (error) {
+                    console.error("Error al actualizar documento: ", error);
+                }
+            });        
+        
+            // Eliminar
+            const eliminarCompu = document.getElementById("formularioBorrar");
+            eliminarCompu.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                try {
+                    const modeloBorrar= eliminarCompu.modeloBorrar.value;
+
+                    // Verifica que el nombre de la caricatura no esté vacío
+                    if (!modeloBorrar) {
+                        console.error("No puede estar vacio");
+                        return;
+                    }
+
+                    const modeloQuery = query(collection(db, "productos"), where("modelo", "==", modeloBorrar));
+                    const querySnapshot = await getDocs(modeloQuery);
+
+                    // Verifica si existen documentos con ese nombre
+                    if (querySnapshot.docs.length === 0) {
+                        console.log("Sin existencias");
+                        return;
+                    }
+
+                    // Itera sobre los documentos que coinciden con el nombre de la caricatura y los elimina
+                    for (const doc of querySnapshot.docs) {
+                        await deleteDoc(doc.ref);
+                        console.log("Producto eliminado");
+                    }
+
+                    // Resetea el formulario después de eliminar los documentos
+                    eliminarCompu.reset();
+                } catch (error) {
+                    console.error("Error al eliminar documento: ", error);
+                }
+            });        
+
 
       </script>
 
@@ -99,6 +205,49 @@
                 <div class="row">
                     <div class="col-md-12 text-center">
                     <button class="btn btn-outline-primary" type="submit" >Agregar</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <form id="formularioBorrar">
+        <h1>Borrar</h1>
+        <input id="modeloBorrar" type="text" placeholder="Buscar.." class="form-control"><br>
+        <button type="submit" class="btn btn-outline-danger">Eliminar</button>
+    </form>
+
+    <div class="formulario">
+        <h1>Buscar</h1>
+        <input type="text" id="modeloLeer" placeholder="Modelo...">
+        <button id="buscarModel" type="button">Buscar</button>
+        
+        <form id="formularioLeer">
+            <label for=""><p>Codigo:</p></label>
+            <input type="text" id="codigoRespuesta" placeholder="" class="form-control"><br>
+            <label for=""><p>Marca:</p></label>
+            <input type="text" id="marcaRespuesta" placeholder="" class="form-control"><br>
+            <label for=""><p>Modelo:</p></label>
+            <input type="text" id="modeloRespuesta" placeholder="" class="form-control"><br>
+            <label for=""><p>Precio:</p></label>
+            <input type="text" id="precioRespuesta" placeholder="" class="form-control"><br>
+            <label for=""><p>Tipo:</p></label>
+            <input type="text" id="tipoRespuesta" placeholder="" class="form-control"><br>
+            <label for=""><p>Material:</p></label>
+            <input type="text" id="materialRespuesta" placeholder="" class="form-control"><br>
+            <label for=""><p>Color:</p></label>
+            <input type="text" id="colorRespuesta" placeholder="" class="form-control"><br>
+            <label for=""><p>Fecha de lanzamiento:</p></label>
+            <input type="text" id="fechaLanzaRespuesta" placeholder="" class="form-control"><br>
+            <label for=""><p>Garantia:</p></label>
+            <input type="text" id="garantiaRespuesta" placeholder="" class="form-control"><br>
+            <label for=""><p>Cantidad:</p></label>
+            <input type="text" id="cantidadRespuesta" placeholder="" class="form-control"><br>
+            
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button class="btn btn-outline-success" type="submit" id="actualizar">Actualizar</button>
                     </div>
                 </div>
             </div>
