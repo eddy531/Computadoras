@@ -5,223 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="index.js" defer type="module" ></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="index.css">
 </head>
 
 <body>
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import {getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, where, getDocs, updateDoc} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
-      
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-          apiKey: "AIzaSyDDRxFwJiPhTufws1Q8s8GqZDq_GySgWxo",
-          authDomain: "computadoras-481b7.firebaseapp.com",
-          projectId: "computadoras-481b7",
-          storageBucket: "computadoras-481b7.appspot.com",
-          messagingSenderId: "744576997492",
-          appId: "1:744576997492:web:cf6a1acc350e2291b55921"
-        };
-      
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app)
-
-        //Insertar
-        const productform = document.getElementById("formulario");
-        productform.addEventListener("submit", async(e)=>{
-            e.preventDefault();
-            await addDoc(collection(db, "productos"),{
-                codigo: productform.codigo.value,
-                marca: productform.marca.value,
-                modelo: productform.modelo.value,
-                precio: productform.precio.value,
-                tipo: productform.tipo.value,
-                material: productform.material.value,
-                color: productform.color.value,
-                fechaLanza: productform.fechaLanza.value,
-                garantia: productform.garantia.value,
-                cantidad: productform.cantidad.value
-            });
-        actualizarTabla();
-            productform.reset();
-        
-        });
-        
-        //Leer
-        const leerproduc = document.getElementById("buscarModel");
-        leerproduc.addEventListener("click", async()=>{
-            const modeloLeer = document.getElementById("modeloLeer").value;
-
-            if (!modeloLeer){
-                console.error("Llene el campo");
-                return;
-            }
-            const modeloQuery = query(collection(db, "productos"), where("modelo", "==", modeloLeer));
-            const querySnapshot = await getDocs(modeloQuery);
-
-            if (querySnapshot.empty) {
-                console.log("No se encontro")
-                return;
-            }
-            const modeloData = querySnapshot.docs[0].data();
-
-            document.getElementById("codigoRespuesta").value = modeloData.codigo;
-            document.getElementById("marcaRespuesta").value = modeloData.marca;
-            document.getElementById("modeloRespuesta").value = modeloData.modelo;
-            document.getElementById("precioRespuesta").value = modeloData.precio;
-            document.getElementById("tipoRespuesta").value = modeloData.tipo;
-            document.getElementById("materialRespuesta").value = modeloData.material;
-            document.getElementById("colorRespuesta").value = modeloData.color;
-            document.getElementById("fechaLanzaRespuesta").value = modeloData.fechaLanza;
-            document.getElementById("garantiaRespuesta").value = modeloData.garantia;
-            document.getElementById("cantidadRespuesta").value = modeloData.cantidad;
-        });
-        //Actualizar
-        const formularioActu = document.getElementById("formularioLeer");    
-        formularioActu.addEventListener("submit", async (e) => {
-                e.preventDefault();
-                try {
-                    
-                    const actualizar = formularioActu.modeloLeer.value;              
-
-                    const computadoraQuery = query(collection(db, "productos"), where("modelo", "==", actualizar));
-                    const querySnapshot = await getDocs(computadoraQuery);
-
-                    if (querySnapshot.empty) {
-                        console.log("No se encontro");
-                        return;
-                    }
-
-                    const docRef = querySnapshot.docs[0].ref;
-                    await updateDoc(docRef, {
-                        codigo: formularioActu.codigoRespuesta.value,
-                        marca: formularioActu.marcaRespuesta.value,
-                        modelo: formularioActu.modeloRespuesta.value,
-                        precio: formularioActu.precioRespuesta.value,
-                        tipo: formularioActu.tipoRespuesta.value,
-                        material: formularioActu.materialRespuesta.value,
-                        color: formularioActu.colorRespuesta.value,
-                        fechaLanza: formularioActu.fechaLanzaRespuesta.value,
-                        garantia: formularioActu.garantiaRespuesta.value,
-                        cantidad: formularioActu.cantidadRespuesta.value,
-                    });
-                    console.log("Documento actualizado correctamente");
-
-                    formularioActu.reset();
-                } catch (error) {
-                    console.error("Error al actualizar documento: ", error);
-                }
-            });        
-        
-            // Eliminar
-            const eliminarCompu = document.getElementById("formularioBorrar");
-            eliminarCompu.addEventListener("submit", async (e) => {
-                e.preventDefault();
-                try {
-                    const modeloBorrar= eliminarCompu.modeloBorrar.value;
-
-                    // Verifica que el nombre de la caricatura no esté vacío
-                    if (!modeloBorrar) {
-                        console.error("No puede estar vacio");
-                        return;
-                    }
-
-                    const modeloQuery = query(collection(db, "productos"), where("modelo", "==", modeloBorrar));
-                    const querySnapshot = await getDocs(modeloQuery);
-
-                    // Verifica si existen documentos con ese nombre
-                    if (querySnapshot.docs.length === 0) {
-                        console.log("Sin existencias");
-                        return;
-                    }
-
-                    // Itera sobre los documentos que coinciden con el nombre de la caricatura y los elimina
-                    for (const doc of querySnapshot.docs) {
-                        await deleteDoc(doc.ref);
-                        console.log("Producto eliminado");
-                    }
-
-                    // Resetea el formulario después de eliminar los documentos
-                    eliminarCompu.reset();
-                } catch (error) {
-                    console.error("Error al eliminar documento: ", error);
-                }
-            });        
-            
-
-
-
-
-
-    
-    // Función para actualizar la tabla con los datos de la base de datos
-    const actualizarTabla = async () => {
-        try {
-            const querySnapshot = await getDocs(collection(db, "productos"));
-            const tablaDatos = document.getElementById("tablaDatos");
-
-            // Limpiar contenido existente de la tabla
-            tablaDatos.innerHTML = "";
-
-            // Iterar sobre los documentos y agregar filas a la tabla
-            querySnapshot.forEach((doc) => {
-                const data = doc.data();
-                const newRow = document.createElement("tr");
-                newRow.innerHTML = `
-                    <td>${data.codigo}</td>
-                    <td>${data.marca}</td>
-                    <td>${data.modelo}</td>
-                    <td>${data.precio}</td>
-                    <td>${data.tipo}</td>
-                    <td>${data.material}</td>
-                    <td>${data.color}</td>
-                    <td>${data.fechaLanza}</td>
-                    <td>${data.garantia}</td>
-                    <td>${data.cantidad}</td>
-                `;
-                tablaDatos.appendChild(newRow);
-            });
-        } catch (error) {
-            console.error("Error al actualizar tabla: ", error);
-        }
-    };
-
-
-
-
-    // Evento para manejar el envío del formulario de agregar producto
-    const productform1 = document.getElementById("formulario");
-    productform.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const producto = {
-            codigo: productform.codigo.value,
-            marca: productform.marca.value,
-            modelo: productform.modelo.value,
-            precio: productform.precio.value,
-            tipo: productform.tipo.value,
-            material: productform.material.value,
-            color: productform.color.value,
-            fechaLanza: productform.fechaLanza.value,
-            garantia: productform.garantia.value,
-            cantidad: productform.cantidad.value
-        };
-        await agregarProducto(producto);
-        productform.reset();
-    });
-
-    // Llamar a la función para actualizar la tabla cuando se carga la página por primera vez
-    actualizarTabla();
-
-      </script>
-
-
     <nav class="navbar">
         <div class=navDer>
             <ul class="elementos">
@@ -243,27 +33,54 @@
         <div class="formulario">
             <form id="formulario">
                 <p class="text-center" style="font-size: 30px;">COMPUTADORA</p>
-                <label for=""><p>Codigo:</p></label>
-                <input type="text" id="codigo" placeholder="02230" class="form-control"><br>
-                <label for=""><p>Marca:</p></label>
-                <input type="text" id="marca" placeholder="Azus" class="form-control"><br>
-                <label for=""><p>Modelo:</p></label>
-                <input type="text" id="modelo" placeholder="Azus Tuf F15" class="form-control"><br>
-                <label for=""><p>Precio:</p></label>
-                <input type="text" id="precio" placeholder="800$" class="form-control"><br>
-                <label for=""><p>Tipo:</p></label>
-                <input type="text" id="tipo" placeholder="Gamer" class="form-control"><br>
-                <label for=""><p>Material:</p></label>
-                <input type="text" id="material" placeholder="Plastico" class="form-control"><br>
-                <label for=""><p>Color:</p></label>
-                <input type="text" id="color" placeholder="Negro" class="form-control"><br>
-                <label for=""><p>Fecha de lanzamiento:</p></label>
-                <input type="text" id="fechaLanza" placeholder="30/02/2020" class="form-control"><br>
-                <label for=""><p>Garantia:</p></label>
-                <input type="text" id="garantia" placeholder="3 años" class="form-control"><br>
-                <label for=""><p>Cantidad:</p></label>
-                <input type="text" id="cantidad" placeholder="15 unidades" class="form-control"><br>
-    
+                <div class="row">
+                    <div class="col col-md-6">
+                        <label for=""><p>Codigo:</p></label>
+                        <input type="text" id="codigo" placeholder="02230" class="form-control"><br>
+                    </div>
+                    <div class="col col-md-6">
+                        <label for=""><p>Marca:</p></label>
+                        <input type="text" id="marca" placeholder="Azus" class="form-control"><br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-md-4">
+                        <label for=""><p>Modelo:</p></label>
+                        <input type="text" id="modelo" placeholder="Azus Tuf F15" class="form-control"><br>
+                    </div>
+                    <div class="col col-md-4">
+                        <label for=""><p>Precio:</p></label>
+                        <input type="text" id="precio" placeholder="800$" class="form-control"><br>
+                    </div>
+                    <div class="col col-md-4">
+                        <label for=""><p>Tipo:</p></label>
+                        <input type="text" id="tipo" placeholder="Gamer" class="form-control"><br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-md-6">
+                        <label for=""><p>Material:</p></label>
+                        <input type="text" id="material" placeholder="Plastico" class="form-control"><br>
+                    </div>
+                    <div class="col col-md-6">
+                        <label for=""><p>Color:</p></label>
+                        <input type="text" id="color" placeholder="Negro" class="form-control"><br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-md-4">
+                        <label for=""><p>Lanzamiento:</p></label>
+                        <input type="text" id="fechaLanza" placeholder="30/02/2020" class="form-control"><br>
+                    </div>
+                    <div class="col col-md-4">
+                        <label for=""><p>Garantia:</p></label>
+                        <input type="text" id="garantia" placeholder="3 años" class="form-control"><br>
+                    </div>
+                    <div class="col col-md-4">
+                        <label for=""><p>Cantidad:</p></label>
+                        <input type="text" id="cantidad" placeholder="15 unidades" class="form-control"><br>
+                    </div>
+                </div>
                 <div class="container">
                     <div class="row">
                         <div class="col-md-12 text-center">
@@ -347,9 +164,6 @@
                 </div>
             </div><br>
         </form>
-    </div>
-    <div id="tablaContainer1">
-        <!-- La tabla será agregada aquí mediante JavaScript -->
     </div>
 </div>
 
