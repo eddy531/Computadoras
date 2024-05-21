@@ -52,7 +52,8 @@
         actualizarTabla();
             productform.reset();
         
-    });
+        });
+        
         //Leer
         const leerproduc = document.getElementById("buscarModel");
         leerproduc.addEventListener("click", async()=>{
@@ -192,6 +193,9 @@
         }
     };
 
+
+
+
     // Evento para manejar el envío del formulario de agregar producto
     const productform1 = document.getElementById("formulario");
     productform.addEventListener("submit", async (e) => {
@@ -272,8 +276,9 @@
     
         
         <div class="container">
+            
             <h2>DATOS</h2>
-            <table class="table" style="width: 5%;">
+            <table class="table table-striped table-bordered" style="width: 5%;">
                 <thead>
                     <tr>
                         <th>Codigo</th>
@@ -286,25 +291,31 @@
                         <th>Fecha de lanzamiento</th>
                         <th>Garantia</th>
                         <th>Cantidad</th>
-                        <th>Opciones</th>
                     </tr>
                 </thead>
                 <tbody id="tablaDatos">
                     <!-- Aquí se agregarán las filas dinámicamente -->
                 </tbody>
             </table>
+            
+            <form id="formularioBorrar">
+                <h1>Borrar</h1><br>
+                <input id="modeloBorrar" type="text" placeholder="Ingrese el Modelo a borrar" class="form-control">
+                <button type="submit" class="btn btn-outline-danger float-end">Eliminar</button>
+            </form>
+            <div>
+                <a href="#formularioLeer"><button class="btn btn btn-success btn btn-lg btn-primary" style="width: 200px;">Actualizar</button></a>
+            </div>
         </div>
+        
     
     </div>
     
-
-
+<div class="principal">
     <div class="formulario">
-
-        
         <form id="formularioLeer">
             <h1>Buscar</h1>
-            <input type="text" id="modeloLeer" placeholder="Modelo..." class="form-control" required>
+            <input type="text" id="modeloLeer" placeholder="Ingrese el modelo que quiere actualizar" class="form-control" required>
             <button id="buscarModel" type="button" class="btn btn-outline-danger">Buscar</button><br><br>
         
             <label for=""><p>Codigo:</p></label>
@@ -337,13 +348,11 @@
             </div><br>
         </form>
     </div>
+    <div id="tablaContainer1">
+        <!-- La tabla será agregada aquí mediante JavaScript -->
+    </div>
+</div>
 
-    <form id="formularioBorrar">
-        <h1>Borrar</h1>
-        <input id="modeloBorrar" type="text" placeholder="Buscar.." class="form-control"><br>
-        <button type="submit" class="btn btn-outline-danger">Eliminar</button>
-    </form>
-        
 
 </body>
 
