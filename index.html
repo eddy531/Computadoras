@@ -49,7 +49,9 @@
                 garantia: productform.garantia.value,
                 cantidad: productform.cantidad.value
             });
-        productform.reset();
+        actualizarTabla();
+            productform.reset();
+        
     });
         //Leer
         const leerproduc = document.getElementById("buscarModel");
@@ -151,7 +153,67 @@
                     console.error("Error al eliminar documento: ", error);
                 }
             });        
+            
 
+
+
+
+
+    
+    // Función para actualizar la tabla con los datos de la base de datos
+    const actualizarTabla = async () => {
+        try {
+            const querySnapshot = await getDocs(collection(db, "productos"));
+            const tablaDatos = document.getElementById("tablaDatos");
+
+            // Limpiar contenido existente de la tabla
+            tablaDatos.innerHTML = "";
+
+            // Iterar sobre los documentos y agregar filas a la tabla
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                const newRow = document.createElement("tr");
+                newRow.innerHTML = `
+                    <td>${data.codigo}</td>
+                    <td>${data.marca}</td>
+                    <td>${data.modelo}</td>
+                    <td>${data.precio}</td>
+                    <td>${data.tipo}</td>
+                    <td>${data.material}</td>
+                    <td>${data.color}</td>
+                    <td>${data.fechaLanza}</td>
+                    <td>${data.garantia}</td>
+                    <td>${data.cantidad}</td>
+                `;
+                tablaDatos.appendChild(newRow);
+            });
+        } catch (error) {
+            console.error("Error al actualizar tabla: ", error);
+        }
+    };
+
+    // Evento para manejar el envío del formulario de agregar producto
+    const productform1 = document.getElementById("formulario");
+    productform.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const producto = {
+            codigo: productform.codigo.value,
+            marca: productform.marca.value,
+            modelo: productform.modelo.value,
+            precio: productform.precio.value,
+            tipo: productform.tipo.value,
+            material: productform.material.value,
+            color: productform.color.value,
+            fechaLanza: productform.fechaLanza.value,
+            garantia: productform.garantia.value,
+            cantidad: productform.cantidad.value
+        };
+        await agregarProducto(producto);
+        productform.reset();
+    });
+
+    // Llamar a la función para actualizar la tabla cuando se carga la página por primera vez
+    actualizarTabla();
 
       </script>
 
@@ -173,70 +235,78 @@
     <section class="imagen">
         <img src="https://www.asus.com/WebsitesBanner/EC/banners/do0qpgdfpf30wlwa/do0qpgdfpf30wlwa-0_0_desktop_0_1X.jpg?webp" alt="">
     </section>
-    <div class="formulario">
-        <form id="formulario">
-            <p class="text-center">COMPUTADORA</p>
-            <label for=""><p>Codigo:</p></label>
-            <input type="text" id="codigo" placeholder="02230" class="form-control"><br>
-            <label for=""><p>Marca:</p></label>
-            <input type="text" id="marca" placeholder="Azus" class="form-control"><br>
-            <label for=""><p>Modelo:</p></label>
-            <input type="text" id="modelo" placeholder="Azus Tuf F15" class="form-control"><br>
-            <label for=""><p>Precio:</p></label>
-            <input type="text" id="precio" placeholder="800$" class="form-control"><br>
-            <label for=""><p>Tipo:</p></label>
-            <input type="text" id="tipo" placeholder="Gamer" class="form-control"><br>
-            <label for=""><p>Material:</p></label>
-            <input type="text" id="material" placeholder="Plastico" class="form-control"><br>
-            <label for=""><p>Color:</p></label>
-            <input type="text" id="color" placeholder="Negro" class="form-control"><br>
-            <label for=""><p>Fecha de lanzamiento:</p></label>
-            <input type="text" id="fechaLanza" placeholder="30/02/2020" class="form-control"><br>
-            <label for=""><p>Garantia:</p></label>
-            <input type="text" id="garantia" placeholder="3 años" class="form-control"><br>
-            <label for=""><p>Cantidad:</p></label>
-            <input type="text" id="cantidad" placeholder="15 unidades" class="form-control"><br>
-
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12 text-center">
-                    <button class="btn btn-outline-primary" type="submit" >Agregar</button>
+    <div class="principal">
+        <div class="formulario">
+            <form id="formulario">
+                <p class="text-center" style="font-size: 30px;">COMPUTADORA</p>
+                <label for=""><p>Codigo:</p></label>
+                <input type="text" id="codigo" placeholder="02230" class="form-control"><br>
+                <label for=""><p>Marca:</p></label>
+                <input type="text" id="marca" placeholder="Azus" class="form-control"><br>
+                <label for=""><p>Modelo:</p></label>
+                <input type="text" id="modelo" placeholder="Azus Tuf F15" class="form-control"><br>
+                <label for=""><p>Precio:</p></label>
+                <input type="text" id="precio" placeholder="800$" class="form-control"><br>
+                <label for=""><p>Tipo:</p></label>
+                <input type="text" id="tipo" placeholder="Gamer" class="form-control"><br>
+                <label for=""><p>Material:</p></label>
+                <input type="text" id="material" placeholder="Plastico" class="form-control"><br>
+                <label for=""><p>Color:</p></label>
+                <input type="text" id="color" placeholder="Negro" class="form-control"><br>
+                <label for=""><p>Fecha de lanzamiento:</p></label>
+                <input type="text" id="fechaLanza" placeholder="30/02/2020" class="form-control"><br>
+                <label for=""><p>Garantia:</p></label>
+                <input type="text" id="garantia" placeholder="3 años" class="form-control"><br>
+                <label for=""><p>Cantidad:</p></label>
+                <input type="text" id="cantidad" placeholder="15 unidades" class="form-control"><br>
+    
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                        <button class="btn btn-outline-primary" type="submit" >Agregar</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
+    
+        
+        <div class="container">
+            <h2>DATOS</h2>
+            <table class="table" style="width: 5%;">
+                <thead>
+                    <tr>
+                        <th>Codigo</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
+                        <th>Precio</th>
+                        <th>Tipo</th>
+                        <th>Material</th>
+                        <th>Color</th>
+                        <th>Fecha de lanzamiento</th>
+                        <th>Garantia</th>
+                        <th>Cantidad</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaDatos">
+                    <!-- Aquí se agregarán las filas dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+    
     </div>
-
-    <!-- Agrega la tabla -->
-    <div class="container">
-        <h2>Datos de la base de datos</h2>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Codigo</th>
-                    <th>Marca</th>
-                    <th>Modelo</th>
-                    <th>Precio</th>
-                    <th>Tipo</th>
-                    <th>Material</th>
-                    <th>Color</th>
-                    <th>Fecha de lanzamiento</th>
-                    <th>Garantia</th>
-                    <th>Cantidad</th>
-                </tr>
-            </thead>
-            <tbody id="tablaDatos">
-                <!-- Aquí se agregarán las filas dinámicamente -->
-            </tbody>
-        </table>
-    </div>
-
+    
 
 
     <div class="formulario">
 
         
         <form id="formularioLeer">
+            <h1>Buscar</h1>
+            <input type="text" id="modeloLeer" placeholder="Modelo..." class="form-control" required>
+            <button id="buscarModel" type="button" class="btn btn-outline-danger">Buscar</button><br><br>
+        
             <label for=""><p>Codigo:</p></label>
             <input type="text" id="codigoRespuesta" placeholder="" class="form-control"><br>
             <label for=""><p>Marca:</p></label>
@@ -265,10 +335,6 @@
                     </div>
                 </div>
             </div><br>
-            <h1>Buscar</h1>
-            <input type="text" id="modeloLeer" placeholder="Modelo..." class="form-control" required>
-            <button id="buscarModel" type="button" class="btn btn-outline-danger">Buscar</button>
-        
         </form>
     </div>
 
