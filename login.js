@@ -25,7 +25,7 @@ googleLogin.addEventListener("click", function(){
     const credential = GoogleAuthProvider.credentialFromResult(result);
     const user = result.user;
     console.log(user);
-    window.location.href = "eddy531.github.io/Computadoras/";
+    window.location.href = "Computadoras/index.html";
 
     }).catch((error) => {
     const errorCode = error.code;
