@@ -1,6 +1,6 @@
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDDRxFwJiPhTufws1Q8s8GqZDq_GySgWxo",
@@ -13,20 +13,19 @@ const firebaseConfig = {
 
   // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth();
+const auth = getAuth(app);
 auth.languageCode = 'es';
 
 const provider = new GoogleAuthProvider();
 
-const googleLogin = document.getElementById("google-login-btn"); 
+const googleLogin = document.querySelector('#google-login-btn'); 
 googleLogin.addEventListener("click", function(){
     signInWithPopup(auth, provider)
     .then((result) => {
     const credential = GoogleAuthProvider.credentialFromResult(result);
     const user = result.user;
-
     console.log(user);
-    window.location.href = "https://eddy531.github.io/Computadoras/";
+    window.location.href = "../index.html";
 
     }).catch((error) => {
     const errorCode = error.code;
