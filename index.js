@@ -15,19 +15,19 @@ import {getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, whe
 
     // Evento para manejar el envío del formulario de agregar producto
     const productform1 = document.getElementById("formulario");
-    productform.addEventListener("submit", async (e) => {
+    productform1.addEventListener("submit", async (e) => {
         e.preventDefault();
         const producto = {
-            codigo: productform.codigo.value,
-            marca: productform.marca.value,
-            modelo: productform.modelo.value,
-            precio: productform.precio.value,
-            tipo: productform.tipo.value,
-            material: productform.material.value,
-            color: productform.color.value,
-            fechaLanza: productform.fechaLanza.value,
-            garantia: productform.garantia.value,
-            cantidad: productform.cantidad.value
+            codigo: productform1.codigo.value,
+            marca: productform1.marca.value,
+            modelo: productform1.modelo.value,
+            precio: productform1.precio.value,
+            tipo: productform1.tipo.value,
+            material: productform1.material.value,
+            color: productform1.color.value,
+            fechaLanza: productform1.fechaLanza.value,
+            garantia: productform1.garantia.value,
+            cantidad: productform1.cantidad.value
         };
         await agregarProducto(producto);
         productform.reset();
